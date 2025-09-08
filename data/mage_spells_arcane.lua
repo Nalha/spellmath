@@ -1,6 +1,6 @@
 -- mage_spells_arcane.lua
 --
--- Spell data for Mage arcane spells in WoW Classic (patch 1.12.1).
+-- Spell data for Mage arcane spells in WoW Classic (patch 1.12.1).
 --
 -- This module defines the base values and coefficients for arcane damage and
 -- absorb abilities.  Only abilities that produce deterministically
@@ -9,7 +9,7 @@
 -- have no direct damage component and are deliberately omitted.  For
 -- reference, a full list of arcane spell IDs is provided in the project
 -- documentation.  To fill in the base damage and mana values, consult
--- classic era sources (e.g. Wowhead or other database mirrors) for each
+-- classic era sources (e.g. Wowhead or other database mirrors) for each
 -- rank and populate the `baseMin`, `baseMax`, `mana` and `absorb.amount`
 -- fields accordingly.
 
@@ -20,56 +20,73 @@ local M = {}
 -- channeled spells the `channeled` subtable stores the total base damage
 -- over the full channel and its duration; for instant AoE spells we use
 -- `baseCast=0.0` to indicate that they fire off the global cooldown.  The
--- coefficients here follow the 3.5 s rule with AoE penalties applied where
+-- coefficients here follow the 3.5 s rule with AoE penalties applied where
 -- appropriate:
---   * Arcane Explosion: (1.5 / 3.5) / 3  ~= 14.29%
---   * Arcane Missiles:  (5.0 / 15.0)    = 33.33% per channel (100% total)
---   * Mana Shield:      10% of the absorbed amount (same as Ice Barrier)
+--   • Arcane Explosion: (1.5 / 3.5) / 3  ≈ 14.29%
+--   • Arcane Missiles:  (5.0 / 15.0)    = 33.33% per channel (100% total)
+--   • Mana Shield:      10% of the absorbed amount (same as Ice Barrier)
 
 M.spells = {
   ---------------------------------------------------------------------
-  -- Arcane Explosion (instant AoE).  This spell has no cast time and
+  -- Arcane Explosion (instant AoE).  This spell has no cast time and
   -- deals the same type of burst damage across all ranks.  The
-  -- coefficient is based on the 1.5 s GCD divided by 3 (AoE penalty).
+  -- coefficient is based on the 1.5 s GCD divided by 3 (AoE penalty).
+  -- Arcane Explosion ranks 1–5.  Damage values pulled from WoW Classic databases.
+  -- Rank 1 (ID 1449): causes 32–36 Arcane damage【601164375237088†L60-L61】.
   [1449]  = { id=1449,  name="Arcane Explosion", rank=1, school="Arcane", type="direct",
-               baseMin=0, baseMax=0, baseCast=0.0, mana=0, coeff=0.1428571 },
+               baseMin=32, baseMax=36, baseCast=0.0, mana=75, coeff=0.1428571 },
+  -- Rank 2 (ID 8437): causes 57–63 Arcane damage【922439498295976†L60-L61】.
   [8437]  = { id=8437,  name="Arcane Explosion", rank=2, school="Arcane", type="direct",
-               baseMin=0, baseMax=0, baseCast=0.0, mana=0, coeff=0.1428571 },
+               baseMin=57, baseMax=63, baseCast=0.0, mana=120, coeff=0.1428571 },
+  -- Rank 3 (ID 8438): causes 97–105 Arcane damage【897521243213013†L60-L61】.
   [8438]  = { id=8438,  name="Arcane Explosion", rank=3, school="Arcane", type="direct",
-               baseMin=0, baseMax=0, baseCast=0.0, mana=0, coeff=0.1428571 },
+               baseMin=97, baseMax=105, baseCast=0.0, mana=185, coeff=0.1428571 },
+  -- Rank 4 (ID 10201): causes 186–202 Arcane damage【157493712678347†L60-L61】.
   [10201] = { id=10201, name="Arcane Explosion", rank=4, school="Arcane", type="direct",
-               baseMin=0, baseMax=0, baseCast=0.0, mana=0, coeff=0.1428571 },
+               baseMin=186, baseMax=202, baseCast=0.0, mana=315, coeff=0.1428571 },
+  -- Rank 5 (ID 10202): causes 243–263 Arcane damage【930618347146107†L60-L61】.
   [10202] = { id=10202, name="Arcane Explosion", rank=5, school="Arcane", type="direct",
-               baseMin=0, baseMax=0, baseCast=0.0, mana=0, coeff=0.1428571 },
+               baseMin=243, baseMax=263, baseCast=0.0, mana=390, coeff=0.1428571 },
 
   ---------------------------------------------------------------------
-  -- Arcane Missiles (channeled).  Each rank channels for approximately
-  -- 5 seconds and fires five missiles.  The coefficient shown below
+  -- Arcane Missiles (channeled).  Each rank channels for approximately
+  -- 5 seconds and fires five missiles.  The coefficient shown below
   -- reflects the full channel (100% of spell power distributed across
   -- the missiles).  Set the `baseTotal` field to the total damage over
   -- the channel and the `duration` to the channel time.  Cast time is
   -- effectively equal to the channel duration.
+  -- Arcane Missiles ranks 1–8.  Each rank channels multiple missiles over
+  -- several seconds.  Base totals are calculated as damage-per-second
+  -- times the channel duration.  Values from WoW Classic databases:
+  -- Rank 1 (ID 5143): 24 damage per second for 3 seconds【994587103974924†L60-L63】.
   [5143]  = { id=5143,  name="Arcane Missiles", rank=1, school="Arcane", mana=0,
-               channeled = { baseTotal=0, duration=5.0, coeff=1.0 } },
+               channeled = { baseTotal=24 * 3, duration=3.0, coeff=1.0 } },
+  -- Rank 2 (ID 5144): 36 damage per second for 4 seconds【661584256605284†L62-L63】.
   [5144]  = { id=5144,  name="Arcane Missiles", rank=2, school="Arcane", mana=0,
-               channeled = { baseTotal=0, duration=5.0, coeff=1.0 } },
+               channeled = { baseTotal=36 * 4, duration=4.0, coeff=1.0 } },
+  -- Rank 3 (ID 5145): 56 damage per second for 5 seconds【180563406004964†L62-L63】.
   [5145]  = { id=5145,  name="Arcane Missiles", rank=3, school="Arcane", mana=0,
-               channeled = { baseTotal=0, duration=5.0, coeff=1.0 } },
+               channeled = { baseTotal=56 * 5, duration=5.0, coeff=1.0 } },
+  -- Rank 4 (ID 8416): 83 damage per second for 5 seconds【826548814381026†L62-L63】.
   [8416]  = { id=8416,  name="Arcane Missiles", rank=4, school="Arcane", mana=0,
-               channeled = { baseTotal=0, duration=5.0, coeff=1.0 } },
+               channeled = { baseTotal=83 * 5, duration=5.0, coeff=1.0 } },
+  -- Rank 5 (ID 8417): 115 damage per second for 5 seconds【760040329458486†L62-L63】.
   [8417]  = { id=8417,  name="Arcane Missiles", rank=5, school="Arcane", mana=0,
-               channeled = { baseTotal=0, duration=5.0, coeff=1.0 } },
+               channeled = { baseTotal=115 * 5, duration=5.0, coeff=1.0 } },
+  -- Rank 6 (ID 10211): 151 damage per second for 5 seconds【630014385472613†L62-L63】.
   [10211] = { id=10211, name="Arcane Missiles", rank=6, school="Arcane", mana=0,
-               channeled = { baseTotal=0, duration=5.0, coeff=1.0 } },
+               channeled = { baseTotal=151 * 5, duration=5.0, coeff=1.0 } },
+  -- Rank 7 (ID 10212): 192 damage per second for 5 seconds【632663820563059†L62-L63】.
   [10212] = { id=10212, name="Arcane Missiles", rank=7, school="Arcane", mana=0,
-               channeled = { baseTotal=0, duration=5.0, coeff=1.0 } },
+               channeled = { baseTotal=192 * 5, duration=5.0, coeff=1.0 } },
+  -- Rank 8 (ID 25345): 230 damage per second for 5 seconds【721965786416238†L60-L63】.
   [25345] = { id=25345, name="Arcane Missiles", rank=8, school="Arcane", mana=0,
-               channeled = { baseTotal=0, duration=5.0, coeff=1.0 } },
+               channeled = { baseTotal=230 * 5, duration=5.0, coeff=1.0 } },
 
   ---------------------------------------------------------------------
-  -- Mana Shield (absorb).  This spell converts mana into a shield
+  -- Mana Shield (absorb).  This spell converts mana into a shield
   -- absorbing incoming damage.  The coefficient is set to 10% (like
-  -- Ice Barrier).  Fill in the `amount` with the shield value for each
+  -- Ice Barrier).  Fill in the `amount` with the shield value for each
   -- rank and set the mana cost accordingly.
   [1463]  = { id=1463,  name="Mana Shield", rank=1, school="Arcane", mana=0,
                absorb = { amount=0, coeff=0.10 } },
@@ -237,12 +254,12 @@ M.spells = {
               baseMin=0, baseMax=0, baseCast=8.0, mana=0, coeff=0.0 },
 
   -- Additional damage ranks and unknown spells
-  -- Arcane Explosion rank 6 (placeholder values)
+  -- Arcane Explosion rank 6 (placeholder values)
   [12600] = { id=12600, name="Arcane Explosion", rank=6, school="Arcane", type="direct",
                baseMin=0, baseMax=0, baseCast=0.0, mana=0, coeff=0.1428571 },
 
   -- Arcane Missiles higher rank (placeholder values).  Follows the same
-  -- 5 second channel as earlier ranks.
+  -- 5 second channel as earlier ranks.
   [28612] = { id=28612, name="Arcane Missiles", rank=9, school="Arcane", mana=0,
                channeled = { baseTotal=0, duration=5.0, coeff=1.0 } },
 
