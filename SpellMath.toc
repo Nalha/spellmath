@@ -1,0 +1,14 @@
+## Interface: 11507
+## Title: SpellMath
+## Notes: Deterministic spell averages in tooltips
+## Author: Nalha Saldana
+## Version: 0.3
+
+bootstrap.lua
+data/mage_spells_frost.lua
+data/mage_spells_fire.lua
+data/mage_talents_frost.lua
+data/mage_talents_fire.lua
+data/mage_talents_arcane.lua
+core/SpellMath.lua
+ui_spellbook.lua
