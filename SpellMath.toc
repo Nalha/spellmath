@@ -7,6 +7,7 @@
 bootstrap.lua
 data/mage_spells_frost.lua
 data/mage_spells_fire.lua
+data/mage_spells_arcane.lua
 data/mage_talents_frost.lua
 data/mage_talents_fire.lua
 data/mage_talents_arcane.lua
